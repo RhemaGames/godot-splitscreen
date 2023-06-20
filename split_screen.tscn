@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dodel0qjpkbch"]
+[gd_scene load_steps=3 format=3 uid="uid://dodel0qjpkbch"]
 
 [ext_resource type="Script" path="res://backend/splitscreen/split_screen.gd" id="1_y7eu2"]
+[ext_resource type="PackedScene" uid="uid://dkjq6gyxoboij" path="res://scenes/UI/score_board.tscn" id="2_08tn2"]
 
 [node name="SplitScreen" type="Control"]
 layout_mode = 3
@@ -12,6 +13,7 @@ grow_vertical = 2
 script = ExtResource("1_y7eu2")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,5 +29,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ScoreBoard" parent="." instance=ExtResource("2_08tn2")]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.0
+grow_vertical = 1
+
 [connection signal="screens_changed" from="." to="." method="_on_screens_changed"]
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="scorereached" from="ScoreBoard" to="." method="_on_score_board_scorereached"]
+[connection signal="time_over" from="ScoreBoard" to="." method="_on_score_board_time_over"]

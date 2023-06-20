@@ -2,6 +2,7 @@
 extends Control
 var screen = preload("res://backend/splitscreen/screen.tscn")
 signal screens_changed()
+#var size:Vector2i
 @export var num_of_screens = 1:
 	set(new_num_of_screens):
 		num_of_screens = new_num_of_screens
@@ -12,6 +13,7 @@ var screens = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#_add_screens()
+	size = get_viewport().size
 	emit_signal("screens_changed")
 	pass # Replace with function body.
 
@@ -30,6 +32,7 @@ func _process(_delta):
 func _add_screens():
 	var s = screen.instantiate()
 	$SubContainer.add_child(s)
+	s.name = "Screen"+str($SubContainer.get_child_count())
 	screens.append(s)
 	s.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_screen_positions()
@@ -42,9 +45,9 @@ func _del_screens():
 
 
 func _on_screens_changed():
-	print("Screen size = ",screens.size())
-	print("Screens ",screens)
-	print("Number of Screens ", num_of_screens)
+	#print("Screen size = ",screens.size())
+	#print("Screens ",screens)
+	#print("Number of Screens ", num_of_screens)
 	if screens.size() != num_of_screens:
 		if screens.size() < num_of_screens:
 			_add_screens()
@@ -99,4 +102,33 @@ func _screen_positions():
 func _on_visibility_changed():
 	emit_signal("screens_changed")
 	
+
+func start_level():
+	var background = get_parent().background
+	background.queue_free()
+	var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
+	background = tutorial.instantiate()
+	$ScoreBoard.show()
+	$ScoreBoard.matchtime = Mistro.game_settings.time
+	$ScoreBoard.maxscore = Mistro.game_settings.score
+	add_child(background)
+	#for screen in $SubContainer.get_children():
+		#print(screen.name)
+		#screen.set_camera3D
+		#var background = screen.get_node("SubViewport").get_child(0)
+		#background.queue_free()
+		#var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
+		#background = tutorial.instantiate()
+		#background.playernum = screen.get_index()+1
+		#screen.get_node("SubViewport").add_child(background)
+
+
+func _on_score_board_scorereached(team, score):
+	print("Game Over, Max Score reached")
+		
+	pass # Replace with function body.
+
+
+func _on_score_board_time_over():
+	print("Game OVer, Time expired")
 	pass # Replace with function body.
