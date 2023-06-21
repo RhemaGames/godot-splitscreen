@@ -30,6 +30,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ScoreBoard" parent="." instance=ExtResource("2_08tn2")]
+visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5

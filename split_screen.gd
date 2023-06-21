@@ -13,6 +13,7 @@ var screens = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#_add_screens()
+	$ScoreBoard.hide()
 	size = get_viewport().size
 	emit_signal("screens_changed")
 	pass # Replace with function body.
@@ -125,7 +126,6 @@ func start_level():
 
 func _on_score_board_scorereached(team, score):
 	print("Game Over, Max Score reached")
-		
 	pass # Replace with function body.
 
 
