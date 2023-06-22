@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dodel0qjpkbch"]
 
-[ext_resource type="Script" path="res://backend/splitscreen/split_screen.gd" id="1_y7eu2"]
-[ext_resource type="PackedScene" uid="uid://dkjq6gyxoboij" path="res://scenes/UI/score_board.tscn" id="2_08tn2"]
+[ext_resource type="Script" path="res://backend/splitscreen/split_screen.gd" id="1_y5r3m"]
+[ext_resource type="PackedScene" uid="uid://dkjq6gyxoboij" path="res://scenes/UI/score_board.tscn" id="2_nub7u"]
 
 [node name="SplitScreen" type="Control"]
 layout_mode = 3
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_y7eu2")
+script = ExtResource("1_y5r3m")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false
@@ -29,7 +29,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScoreBoard" parent="." instance=ExtResource("2_08tn2")]
+[node name="ScoreBoard" parent="." instance=ExtResource("2_nub7u")]
 visible = false
 layout_mode = 1
 anchors_preset = 5
