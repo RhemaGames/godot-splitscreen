@@ -2,6 +2,7 @@
 extends Control
 var screen = preload("res://backend/splitscreen/screen.tscn")
 signal screens_changed()
+signal game_over()
 #var size:Vector2i
 @export var num_of_screens = 1:
 	set(new_num_of_screens):
@@ -14,6 +15,7 @@ var screens = []
 func _ready():
 	#_add_screens()
 	$ScoreBoard.hide()
+	$LevelStart.hide()
 	size = get_viewport().size
 	emit_signal("screens_changed")
 	pass # Replace with function body.
@@ -108,12 +110,16 @@ func start_level():
 	var background = get_parent().background
 	background.queue_free()
 	var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
+	var song = load("res://assets/music/Electro_Swing_-_Alexey_Anisimov.mp3")
 	background = tutorial.instantiate()
-	$ScoreBoard.show()
+	
 	$ScoreBoard.matchtime = Mistro.game_settings.time
 	$ScoreBoard.maxscore = Mistro.game_settings.score
 	add_child(background)
-	#for screen in $SubContainer.get_children():
+	get_parent().get_node("BGM").stream = song
+	
+	for screen in $SubContainer.get_children():
+		screen.get_node("SubViewport").transparent_bg = false
 		#print(screen.name)
 		#screen.set_camera3D
 		#var background = screen.get_node("SubViewport").get_child(0)
@@ -122,6 +128,8 @@ func start_level():
 		#background = tutorial.instantiate()
 		#background.playernum = screen.get_index()+1
 		#screen.get_node("SubViewport").add_child(background)
+	#$LevelStart.show()
+	$LevelStart/AnimationPlayer.play("countdown")
 
 
 func _on_score_board_scorereached(team, score):
@@ -130,5 +138,19 @@ func _on_score_board_scorereached(team, score):
 
 
 func _on_score_board_time_over():
-	print("Game OVer, Time expired")
+	$ScoreBoard/Timer.stop()
+	emit_signal("game_over")
+	pass # Replace with function body.
+
+
+func _on_level_start_visibility_changed():
+	#if visible:
+	#	$LevelStart/AnimationPlayer.play("countdown")
+	pass # Replace with function body.
+
+
+func _on_animation_player_animation_finished(anim_name):
+	if anim_name == "countdown":
+		$ScoreBoard.show()
+		get_parent().get_node("BGM").play()
 	pass # Replace with function body.

@@ -1,7 +1,142 @@
-[gd_scene load_steps=3 format=3 uid="uid://dodel0qjpkbch"]
+[gd_scene load_steps=8 format=3 uid="uid://dodel0qjpkbch"]
 
-[ext_resource type="Script" path="res://backend/splitscreen/split_screen.gd" id="1_y5r3m"]
-[ext_resource type="PackedScene" uid="uid://dkjq6gyxoboij" path="res://scenes/UI/score_board.tscn" id="2_nub7u"]
+[ext_resource type="Script" path="res://backend/splitscreen/split_screen.gd" id="1_pmcvh"]
+[ext_resource type="PackedScene" uid="uid://dkjq6gyxoboij" path="res://scenes/UI/score_board.tscn" id="2_76hy1"]
+[ext_resource type="FontFile" uid="uid://bhini3ajjydtn" path="res://assets/Fonts/Space Quest.ttf" id="3_5kktg"]
+[ext_resource type="AudioStream" uid="uid://dx7k367yoytb6" path="res://assets/sfx/interface/TomWinandySFX_UI_ScifiTech_Button-Select_27.wav" id="4_m3neo"]
+
+[sub_resource type="Animation" id="Animation_7716d"]
+resource_name = "countdown"
+length = 3.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("First:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.7, 1.5, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Middle:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1.6, 2.6, 2.7),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Last:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(2.8, 3.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.6, 3.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AudioStreamPlayer:playing")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.6, 1.7, 2.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, true, true]
+}
+
+[sub_resource type="Animation" id="Animation_m3174"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("First:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Middle:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Last:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AudioStreamPlayer:playing")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_iw3vt"]
+_data = {
+"RESET": SubResource("Animation_m3174"),
+"countdown": SubResource("Animation_7716d")
+}
 
 [node name="SplitScreen" type="Control"]
 layout_mode = 3
@@ -10,16 +145,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_y5r3m")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+script = ExtResource("1_pmcvh")
 
 [node name="SubContainer" type="Control" parent="."]
 layout_mode = 1
@@ -29,7 +155,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScoreBoard" parent="." instance=ExtResource("2_nub7u")]
+[node name="ScoreBoard" parent="." instance=ExtResource("2_76hy1")]
 visible = false
 layout_mode = 1
 anchors_preset = 5
@@ -38,6 +164,84 @@ anchor_right = 0.5
 anchor_bottom = 0.0
 grow_vertical = 1
 
+[node name="LevelStart" type="Panel" parent="."]
+visible = false
+clip_contents = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 31.0
+offset_top = -64.0
+offset_right = -29.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="First" type="Label" parent="LevelStart"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_5kktg")
+theme_override_font_sizes/font_size = 128
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 3
+uppercase = true
+
+[node name="Middle" type="Label" parent="LevelStart"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_5kktg")
+theme_override_font_sizes/font_size = 128
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 3
+uppercase = true
+
+[node name="Last" type="Label" parent="LevelStart"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_5kktg")
+theme_override_font_sizes/font_size = 128
+text = "GO!!"
+horizontal_alignment = 1
+vertical_alignment = 3
+uppercase = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelStart"]
+libraries = {
+"": SubResource("AnimationLibrary_iw3vt")
+}
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="LevelStart"]
+stream = ExtResource("4_m3neo")
+bus = &"SFX"
+
 [connection signal="screens_changed" from="." to="." method="_on_screens_changed"]
 [connection signal="scorereached" from="ScoreBoard" to="." method="_on_score_board_scorereached"]
 [connection signal="time_over" from="ScoreBoard" to="." method="_on_score_board_time_over"]
+[connection signal="visibility_changed" from="LevelStart" to="." method="_on_level_start_visibility_changed"]
+[connection signal="animation_finished" from="LevelStart/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
