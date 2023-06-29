@@ -154,3 +154,23 @@ func _on_animation_player_animation_finished(anim_name):
 		$ScoreBoard.show()
 		get_parent().get_node("BGM").play()
 	pass # Replace with function body.
+
+func _input(event):
+	if visible:
+		if event is InputEventJoypadButton or event is InputEventKey:
+			for button in ["p1_menu","p2_menu","p3_menu","p4_menu"]:
+				if event.is_action_pressed(button):
+					if !$PauseScreen.visible:
+						match button:
+							"p1_menu":
+								$PauseScreen.by = "Player 1"
+							"p2_menu":
+								$PauseScreen.by = "Player 2"
+							"p3_menu":
+								$PauseScreen.by = "Player 3"
+							"p4_menu":
+								$PauseScreen.by = "Player 4"
+						$PauseScreen.show()
+					else:
+						$PauseScreen.hide()
+			
