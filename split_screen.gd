@@ -133,14 +133,14 @@ func start_level():
 
 
 func _on_score_board_scorereached(team, score):
-	print("Game Over, Max Score reached")
-	pass # Replace with function body.
+	$ScoreBoard/Timer.stop()
+	emit_signal("game_over")
 
 
 func _on_score_board_time_over():
 	$ScoreBoard/Timer.stop()
+	$ScoreBoard.hide()
 	emit_signal("game_over")
-	pass # Replace with function body.
 
 
 func _on_level_start_visibility_changed():
