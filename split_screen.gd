@@ -4,10 +4,15 @@ var screen = preload("res://backend/splitscreen/screen.tscn")
 signal screens_changed()
 signal game_over()
 #var size:Vector2i
-@export var num_of_screens = 1:
+@export var num_of_screens = 0:
 	set(new_num_of_screens):
-		num_of_screens = new_num_of_screens
-		emit_signal("screens_changed")
+		print("Caught screen change should be",new_num_of_screens)
+		if new_num_of_screens >=1:
+			num_of_screens = new_num_of_screens
+			emit_signal("screens_changed")
+		else:
+			num_of_screens = 1
+			emit_signal("screens_changed")
 			
 var screens = []
 
@@ -33,31 +38,35 @@ func _process(_delta):
 
 
 func _add_screens():
-	var s = screen.instantiate()
-	$SubContainer.add_child(s)
-	s.name = "Screen"+str($SubContainer.get_child_count())
-	screens.append(s)
-	s.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_screen_positions()
+	if visible:
+		print("Adding Screen")
+		var s = screen.instantiate()
+		$SubContainer.add_child(s)
+		s.name = "Screen"+str($SubContainer.get_child_count())
+		screens.append(s)
+		s.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		_screen_positions()
 	
 func _del_screens():
-	screens[-1].queue_free()
-	screens.erase(screens[-1])
-	_screen_positions()
+	
+	if visible and screens.size() > 0:
+		print("Deleting Screen")
+		screens[-1].queue_free()
+		screens.erase(screens[-1])
+		_screen_positions()
 	pass
 
 
 func _on_screens_changed():
-	#print("Screen size = ",screens.size())
-	#print("Screens ",screens)
-	#print("Number of Screens ", num_of_screens)
-	if screens.size() != num_of_screens:
-		if screens.size() < num_of_screens:
-			_add_screens()
-		else:
-			_del_screens()
-	_screen_positions()
-	pass # Replace with function body.
+	if visible:
+		if screens.size() != num_of_screens:
+			if screens.size() < num_of_screens:
+				while screens.size() < num_of_screens:
+					_add_screens()
+			elif screens.size() > num_of_screens:
+				while screens.size() < num_of_screens:
+					_del_screens()
+		_screen_positions()
 
 func _screen_positions():
 	var index = 0
