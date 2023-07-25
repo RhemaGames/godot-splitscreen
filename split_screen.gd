@@ -165,7 +165,9 @@ func _on_animation_player_animation_finished(anim_name):
 	pass # Replace with function body.
 
 func _input(event):
+	
 	if visible:
+		print_debug("Split Screen thinks its visible")
 		if event is InputEventJoypadButton or event is InputEventKey:
 			for button in ["p1_menu","p2_menu","p3_menu","p4_menu"]:
 				if event.is_action_pressed(button):
