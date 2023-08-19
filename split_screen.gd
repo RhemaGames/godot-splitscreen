@@ -6,15 +6,17 @@ signal game_over()
 #var size:Vector2i
 @export var num_of_screens = 0:
 	set(new_num_of_screens):
-		print("Caught screen change should be",new_num_of_screens)
+		print("Caught screen change should be ",new_num_of_screens)
 		if new_num_of_screens >=1:
 			num_of_screens = new_num_of_screens
 			emit_signal("screens_changed")
-		else:
-			num_of_screens = 1
-			emit_signal("screens_changed")
+		#else:
+		#	num_of_screens = 1
+		#	emit_signal("screens_changed")
 			
 var screens = []
+
+var level:Node3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,11 +31,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	#if Engine.is_editor_hint():
-	#	if screens.size() != num_of_screens:
-	#		if screens.size() < num_of_screens:
-	#			_add_screens()
-	#		else:
-	#			_del_screens()
+	#if screens.size() != num_of_screens:
+	#	if screens.size() < num_of_screens:
+	#		_add_screens()
+	#	else:
+	#		_del_screens()
 	pass
 
 
@@ -48,13 +50,11 @@ func _add_screens():
 		_screen_positions()
 	
 func _del_screens():
-	
 	if visible and screens.size() > 0:
 		print("Deleting Screen")
 		screens[-1].queue_free()
 		screens.erase(screens[-1])
 		_screen_positions()
-	pass
 
 
 func _on_screens_changed():
@@ -67,6 +67,8 @@ func _on_screens_changed():
 				while screens.size() < num_of_screens:
 					_del_screens()
 		_screen_positions()
+		print_debug($SubContainer.get_children())
+		
 
 func _screen_positions():
 	var index = 0
@@ -116,61 +118,63 @@ func _on_visibility_changed():
 	
 
 func start_level():
-	var background = get_parent().background
-	background.queue_free()
-	var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
+	print_debug("Starting Level")
+	_on_screens_changed()
+	level = get_parent().background
+	level.queue_free()
+	#var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
+	var tutorial = load("res://scenes/World/City/city_level.tscn")
 	var song = load("res://assets/music/Electro_Swing_-_Alexey_Anisimov.mp3")
-	background = tutorial.instantiate()
+	level = tutorial.instantiate()
 	
 	$ScoreBoard.matchtime = Mistro.game_settings.time
 	$ScoreBoard.maxscore = Mistro.game_settings.score
-	add_child(background)
+	add_child(level)
 	get_parent().get_node("BGM").stream = song
 	
 	for screen in $SubContainer.get_children():
 		screen.get_node("SubViewport").transparent_bg = false
-		#print(screen.name)
-		#screen.set_camera3D
+		print(screen.name)
+	#	screen.set_camera3D
 		#var background = screen.get_node("SubViewport").get_child(0)
 		#background.queue_free()
 		#var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
 		#background = tutorial.instantiate()
-		#background.playernum = screen.get_index()+1
-		#screen.get_node("SubViewport").add_child(background)
-	#$LevelStart.show()
+		#\background.playernum = screen.get_index()+1
+	#	screen.get_node("SubViewport").add_child(background)
+	$LevelStart.show()
 	$LevelStart/AnimationPlayer.play("countdown")
 
 
 func _on_score_board_scorereached(team, score):
-	$ScoreBoard/Timer.stop()
-	emit_signal("game_over")
+	if visible:
+		$ScoreBoard/Timer.stop()
+		emit_signal("game_over")
 
 
 func _on_score_board_time_over():
-	$ScoreBoard/Timer.stop()
-	$ScoreBoard.hide()
-	emit_signal("game_over")
+	if visible:
+		$ScoreBoard/Timer.stop()
+		$ScoreBoard.hide()
+		emit_signal("game_over")
 
 
 func _on_level_start_visibility_changed():
-	#if visible:
-	#	$LevelStart/AnimationPlayer.play("countdown")
-	pass # Replace with function body.
-
+	if visible:
+		print_debug("Level Start")
+		$LevelStart/AnimationPlayer.play("countdown")
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "countdown":
 		$ScoreBoard.show()
 		get_parent().get_node("BGM").play()
-	pass # Replace with function body.
 
 func _input(event):
-	
 	if visible:
-		print_debug("Split Screen thinks its visible")
-		if event is InputEventJoypadButton or event is InputEventKey:
+		#print_debug("Split Screen thinks its visible")
+		#if event is InputEventJoypadButton or event is InputEventKey:
 			for button in ["p1_menu","p2_menu","p3_menu","p4_menu"]:
-				if event.is_action_pressed(button):
+				if Input.is_action_just_pressed(button):
 					if !$PauseScreen.visible:
 						match button:
 							"p1_menu":
@@ -185,3 +189,10 @@ func _input(event):
 					else:
 						$PauseScreen.hide()
 			
+
+
+func _on_game_over():
+	get_parent().get_node("BGM").stop()
+	if is_instance_valid(level):
+		level.end_game()
+	self.hide()

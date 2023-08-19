@@ -245,6 +245,7 @@ bus = &"SFX"
 visible = false
 layout_mode = 1
 
+[connection signal="game_over" from="." to="." method="_on_game_over"]
 [connection signal="screens_changed" from="." to="." method="_on_screens_changed"]
 [connection signal="scorereached" from="ScoreBoard" to="." method="_on_score_board_scorereached"]
 [connection signal="time_over" from="ScoreBoard" to="." method="_on_score_board_time_over"]
