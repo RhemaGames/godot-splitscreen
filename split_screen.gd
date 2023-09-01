@@ -193,6 +193,8 @@ func _input(event):
 
 func _on_game_over():
 	get_parent().get_node("BGM").stop()
+	$ScoreBoard.matchtime = Mistro.game_settings.time
+	$ScoreBoard.maxscore = Mistro.game_settings.score
 	if is_instance_valid(level):
 		level.end_game()
 	self.hide()
