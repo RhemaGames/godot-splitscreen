@@ -12,6 +12,7 @@ stretch = true
 transparent_bg = true
 handle_input_locally = false
 audio_listener_enable_3d = true
+canvas_cull_mask = 4294966272
 size = Vector2i(1366, 700)
 render_target_update_mode = 4
 

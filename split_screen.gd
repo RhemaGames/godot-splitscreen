@@ -120,28 +120,21 @@ func _on_visibility_changed():
 func start_level():
 	print_debug("Starting Level")
 	_on_screens_changed()
-	level = get_parent().background
-	level.queue_free()
+	#level = get_parent().background.get_node("MenuBG")
+	#level.queue_free()
 	#var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
 	var tutorial = load("res://scenes/World/City/city_level.tscn")
 	var song = load("res://assets/music/Electro_Swing_-_Alexey_Anisimov.mp3")
-	level = tutorial.instantiate()
-	
+	#level = tutorial.instantiate()
 	$ScoreBoard.matchtime = Mistro.game_settings.time
 	$ScoreBoard.maxscore = Mistro.game_settings.score
-	add_child(level)
+	#get_parent().background.add_child(level)
 	get_parent().get_node("BGM").stream = song
 	
 	for screen in $SubContainer.get_children():
 		screen.get_node("SubViewport").transparent_bg = false
-		print(screen.name)
-	#	screen.set_camera3D
-		#var background = screen.get_node("SubViewport").get_child(0)
-		#background.queue_free()
-		#var tutorial = load("res://scenes/World/Transport/Tutorial.tscn")
-		#background = tutorial.instantiate()
-		#\background.playernum = screen.get_index()+1
-	#	screen.get_node("SubViewport").add_child(background)
+		print_debug("Screen Name: ",screen.name)
+		print_debug("Player for Screen: ",Mistro.players.keys()[screen.get_index()])
 	$LevelStart.show()
 	$LevelStart/AnimationPlayer.play("countdown")
 
@@ -161,13 +154,14 @@ func _on_score_board_time_over():
 
 func _on_level_start_visibility_changed():
 	if visible:
-		print_debug("Level Start")
+		#print_debug("Level Start")
 		$LevelStart/AnimationPlayer.play("countdown")
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "countdown":
 		$ScoreBoard.show()
 		get_parent().get_node("BGM").play()
+		Mistro.emit_signal("state_changed","GameStart")
 
 func _input(event):
 	if visible:
@@ -195,6 +189,8 @@ func _on_game_over():
 	get_parent().get_node("BGM").stop()
 	$ScoreBoard.matchtime = Mistro.game_settings.time
 	$ScoreBoard.maxscore = Mistro.game_settings.score
-	if is_instance_valid(level):
-		level.end_game()
+	num_of_screens = 1
+	#while is_instance_valid(level):
+	#	if level.end_game():
+	#		level.free()
 	self.hide()
