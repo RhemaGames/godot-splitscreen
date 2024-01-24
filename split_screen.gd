@@ -7,12 +7,8 @@ signal game_over()
 @export var num_of_screens = 0:
 	set(new_num_of_screens):
 		print("Caught screen change should be ",new_num_of_screens)
-		if new_num_of_screens >=1:
-			num_of_screens = new_num_of_screens
-			emit_signal("screens_changed")
-		#else:
-		#	num_of_screens = 1
-		#	emit_signal("screens_changed")
+		num_of_screens = new_num_of_screens
+		emit_signal("screens_changed")
 			
 var screens = []
 
@@ -41,13 +37,14 @@ func _process(_delta):
 
 func _add_screens():
 	if visible:
-		print("Adding Screen")
-		var s = screen.instantiate()
-		$SubContainer.add_child(s)
-		s.name = "Screen"+str($SubContainer.get_child_count())
-		screens.append(s)
-		s.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		_screen_positions()
+		if screens.size() < num_of_screens:
+			print("Adding Screen")
+			var s = screen.instantiate()
+			$SubContainer.add_child(s)
+			s.name = "Screen"+str($SubContainer.get_child_count())
+			screens.append(s)
+			s.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			_screen_positions()
 	
 func _del_screens():
 	if visible and screens.size() > 0:
@@ -189,7 +186,12 @@ func _on_game_over():
 	get_parent().get_node("BGM").stop()
 	$ScoreBoard.matchtime = Mistro.game_settings.time
 	$ScoreBoard.maxscore = Mistro.game_settings.score
+	for screen in screens:
+		screen.queue_free()
+	screens.clear()
+	
 	num_of_screens = 1
+	
 	#while is_instance_valid(level):
 	#	if level.end_game():
 	#		level.free()
